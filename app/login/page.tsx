@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { signIn } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -10,6 +10,15 @@ export default function LoginPage() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [isRegister, setIsRegister] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const authError = searchParams.get('error')
+
+  const errorMessage =
+    authError === 'Configuration'
+      ? 'Помилка конфігурації авторизації на сервері. Перевірте NEXTAUTH_SECRET та NEXTAUTH_URL у Netlify.'
+      : authError
+        ? 'Не вдалося виконати вхід або реєстрацію. Спробуйте ще раз.'
+        : ''
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -25,11 +34,14 @@ export default function LoginPage() {
       action: isRegister ? 'register' : 'login',
       redirect: false,
     })
+
     if (result?.ok) {
       router.push('/')
-    } else {
-      alert('Error: ' + (isRegister ? 'Registration failed' : 'Login failed'))
+      router.refresh()
+      return
     }
+
+    alert(isRegister ? 'Не вдалося зареєструвати акаунт.' : 'Не вдалося увійти в акаунт.')
   }
 
   return (
@@ -43,6 +55,13 @@ export default function LoginPage() {
             {isRegister ? 'Введіть свої дані для створення акаунта' : 'Увійдіть, щоб швидко оформити замовлення'}
           </p>
         </div>
+
+        {errorMessage && (
+          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+            {errorMessage}
+          </div>
+        )}
+
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-3xl border border-gray-200 bg-white p-4 shadow-sm ring-1 ring-black/5">
             <div className="space-y-4">
@@ -61,6 +80,7 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
+
               <div>
                 <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                   Пароль
@@ -78,6 +98,7 @@ export default function LoginPage() {
               </div>
             </div>
           </div>
+
           {isRegister && (
             <div className="rounded-3xl border border-gray-200 bg-white p-4 shadow-sm ring-1 ring-black/5">
               <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
@@ -95,6 +116,7 @@ export default function LoginPage() {
               />
             </div>
           )}
+
           <div>
             <button
               type="submit"
@@ -103,6 +125,7 @@ export default function LoginPage() {
               {isRegister ? 'Зареєструватися' : 'Увійти'}
             </button>
           </div>
+
           <div className="text-center">
             <button
               type="button"
