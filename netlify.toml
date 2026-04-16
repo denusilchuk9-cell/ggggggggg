@@ -2,5 +2,21 @@
   command = "npm run build"
   publish = ".next"
 
+[build.environment]
+  NEXT_DISABLE_TYPECHECK = "true"
+
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+[functions]
+  node_bundler = "esbuild"
+
+[context.production.environment]
+  TELEGRAM_BOT_TOKEN = "8702259788:AAHaeJMvT8TytUSeBa29gw3-eus-tH3F83s"
+  TELEGRAM_CHAT_ID = "1381016974"
+
+[context.production]
+  environment = {
+    TELEGRAM_BOT_TOKEN = "8702259788:AAHaeJMvT8TytUSeBa29gw3-eus-tH3F83s",
+    TELEGRAM_CHAT_ID = "1381016974"
+  }
