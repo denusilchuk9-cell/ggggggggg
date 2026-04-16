@@ -22,9 +22,11 @@ export default NextAuth({
         const password = credentials.password
         const action = credentials.action
         const users = readUsers()
+
         if (action === 'register') {
-          const existing = users.find(u => u.email === email)
+          const existing = users.find((u) => u.email === email)
           if (existing) return null
+
           try {
             const user = { id: Date.now().toString(), email, password }
             users.push(user)
@@ -34,11 +36,11 @@ export default NextAuth({
             console.error('Registration failed:', error)
             return null
           }
-        } else {
-          const user = users.find(u => u.email === email && u.password === password)
-          if (user) return { id: user.id, email: user.email }
-          return null
         }
+
+        const user = users.find((u) => u.email === email && u.password === password)
+        if (user) return { id: user.id, email: user.email }
+        return null
       }
     })
   ],
