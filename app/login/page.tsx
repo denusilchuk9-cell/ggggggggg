@@ -11,7 +11,7 @@ export default function LoginPage() {
   const [isRegister, setIsRegister] = useState(false)
   const router = useRouter()
   const searchParams = useSearchParams()
-  const authError = searchParams.get('error')
+  const authError = searchParams?.get('error') ?? ''
 
   const errorMessage =
     authError === 'Configuration'
