@@ -10,15 +10,6 @@ export default function LoginPage() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [isRegister, setIsRegister] = useState(false)
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const authError = searchParams?.get('error') ?? ''
-
-  const errorMessage =
-    authError === 'Configuration'
-      ? 'Помилка конфігурації авторизації на сервері. Перевірте NEXTAUTH_SECRET та NEXTAUTH_URL у Netlify.'
-      : authError
-        ? 'Не вдалося виконати вхід або реєстрацію. Спробуйте ще раз.'
-        : ''
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -55,12 +46,6 @@ export default function LoginPage() {
             {isRegister ? 'Введіть свої дані для створення акаунта' : 'Увійдіть, щоб швидко оформити замовлення'}
           </p>
         </div>
-
-        {errorMessage && (
-          <div className="rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-            {errorMessage}
-          </div>
-        )}
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-3xl border border-gray-200 bg-white p-4 shadow-sm ring-1 ring-black/5">
